@@ -135,7 +135,7 @@ export default {
 .countdown {
   display: inline-block;
   font-weight: 700;
-  color: white;
+  color: var(--white);
   text-align: center;
   width: 100%;
 }
