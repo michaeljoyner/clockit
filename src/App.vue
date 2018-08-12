@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="[themeName, showMenu ? 'exposed' : '']">
+  <div id="app" :class="themeName">
     
     <div id="nav">
       <div class="">
@@ -16,8 +16,8 @@
       </div>
       
     </div>
-    <router-view/>
-    <div class="settings-drawer">
+    <router-view></router-view>
+    <div class="settings-drawer" :class="{'exposed': showMenu}">
       <header>
         <h3>Settings</h3>
         <button class="clear-button" @click="toggleNav()">&times;</button>
@@ -44,6 +44,17 @@ export default {
   computed: {
     themeName() {
       return this.$store.getters.themeName;
+    },
+
+    appClasses() {
+      const exp = this.showMenu ? "exposed" : "";
+      // return `${exp} ${this.themeName}`;
+      // return `${this.themeName} ${exp}`.trim();
+      let a = [this.themeName];
+      if (this.showMenu) {
+        a.push("exposed");
+      }
+      return a;
     }
   },
 
@@ -142,7 +153,7 @@ svg {
   transform: translate3d(300px, 0, 0);
 }
 
-#app.exposed .settings-drawer {
+.settings-drawer.exposed {
   transform: translate3d(0, 0, 0);
 }
 

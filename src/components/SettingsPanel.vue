@@ -4,11 +4,11 @@
             <span class="title">Theme:</span>
             <div>
                 <label class="radio-option" for="midnight">
-                    <input type="radio" name="theme" :checked="themename === 'midnight'" value="midnight" id="midnight" @input="updateThemename">
+                    <input type="radio" name="theme" :checked="themename === 'midnight'" value="midnight" id="midnight" @change="updateThemename">
                     <span>Midnight</span>
                 </label>
                 <label class="radio-option" for="paperwhite">
-                    <input type="radio" name="theme" :checked="themename === 'paperwhite'" value="paperwhite" id="paperwhite" @input="updateThemename">
+                    <input type="radio" name="theme" :checked="themename === 'paperwhite'" value="paperwhite" id="paperwhite" @change="updateThemename">
                     <span>Paperwhite</span>
                 </label>
             </div>
@@ -60,13 +60,10 @@ export default {
 
   methods: {
     updateThemename({ target: { value } }) {
-      console.log(value);
       this.$store.commit("setTheme", value);
     },
 
     updateMuted({ target: { checked } }) {
-      console.log(checked);
-
       this.$store.commit("setMuted", checked);
     },
 
