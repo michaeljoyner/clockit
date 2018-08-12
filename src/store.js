@@ -1,16 +1,18 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-
+    announce_timeup: false,
+    timeup_announcement: "Pens down bitches"
   },
-  mutations: {
-
+  getters: {
+    announce(state) {
+      return state.announce_timeup;
+    }
   },
-  actions: {
-
-  }
-})
+  mutations: {},
+  actions: {}
+});
