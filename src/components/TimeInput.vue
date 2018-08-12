@@ -1,7 +1,7 @@
 <template>
   <span tabindex="0" class="time-input" @keydown="handleKey">
     <div class="centering">
-      <span class="time-input-string">{{time_string}}</span>
+      <span class="big-text time-input-string">{{time_string}}</span>
     </div>
     <div class="input-grid">
       <div @click="addInput(7)">7</div>
@@ -143,11 +143,11 @@ export default {
 
 .time-input-string {
   display: inline-block;
-  font-size: 3rem;
   font-weight: 700;
   color: var(--white);
   text-align: center;
   width: auto;
+  margin-top: 1em;
 }
 
 .input-grid {

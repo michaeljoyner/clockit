@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="[themeName, showMenu ? 'exposed' : '']">
     
     <div id="nav">
       <div class="">
@@ -22,19 +22,34 @@
         <h3>Settings</h3>
         <button class="clear-button" @click="toggleNav()">&times;</button>
       </header>
-      
+      <settings-panel></settings-panel>    
     </div>
   </div>
 </template>
 
 <script>
+import SettingsPanel from "@/components/SettingsPanel.vue";
+
 export default {
+  components: {
+    SettingsPanel
+  },
+
+  data() {
+    return {
+      showMenu: false
+    };
+  },
+
+  computed: {
+    themeName() {
+      return this.$store.getters.themeName;
+    }
+  },
+
   methods: {
     toggleNav() {
-      if (this.$el.classList.contains("exposed")) {
-        return this.$el.classList.remove("exposed");
-      }
-      this.$el.classList.add("exposed");
+      this.showMenu = !this.showMenu;
     }
   }
 };
@@ -42,12 +57,20 @@ export default {
 
 
 <style lang="css" type="text/css">
-:root {
+#app.midnight {
   --bg-col: #191c2c;
   --bg-col-sec: #252d5a;
   --primary: red;
   --secondary: yellow;
   --white: white;
+}
+
+#app.paperwhite {
+  --bg-col: #ffffff;
+  --bg-col-sec: silver;
+  --primary: #333;
+  --secondary: #111;
+  --white: #333;
 }
 
 html {
@@ -63,6 +86,12 @@ body {
   color: var(--primary);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+#app {
+  background: var(--bg-col);
+  color: var(--primary);
 }
 
 svg {
@@ -126,5 +155,53 @@ svg {
 .settings-drawer header button {
   font-size: 2rem;
   color: var(--white);
+}
+
+.big-text {
+  font-size: 3rem;
+}
+
+.action-button-row {
+  display: flex;
+  justify-content: center;
+}
+
+.action-button-row > button {
+  border: 2px solid var(--white);
+  padding: 0.5rem 1rem;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  background: transparent;
+  margin: 0 1rem;
+}
+
+.action-button-row > button:hover {
+  color: var(--bg-col);
+  background: var(--white);
+}
+
+@media (max-width: 499px) {
+  .big-text {
+    font-size: 2.75rem;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 860px) {
+  .big-text {
+    font-size: 5rem;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1200px) {
+  .big-text {
+    font-size: 7rem;
+  }
+}
+
+@media (min-width: 1201px) {
+  .big-text {
+    font-size: 9rem;
+  }
 }
 </style>

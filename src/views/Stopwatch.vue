@@ -1,14 +1,14 @@
 <template>
     <div>
-        <p class="elapsed-time">
+        <p class="elapsed-time big-text">
             <span>{{ elapsed_hours }}</span>:
             <span>{{ elapsed_minutes }}</span>:
             <span>{{ elapsed_seconds }}</span>:
             <span>{{ elapsed_splits }}</span>
         </p>
         <div class="action-button-row">
-            <button @click="reset()">Reset</button>
-            <button @click="toggle()">{{ pause_play }}</button>
+            <button @click="reset()" @keydown.space.prevent="">Reset</button>
+            <button @click="toggle()" @keydown.space.prevent="">{{ pause_play }}</button>
         </div>
     </div>
     
@@ -75,9 +75,20 @@ export default {
       }
     },
 
+    announce() {
+      if (this.$store.getters.muted) {
+        return;
+      }
+      const ut = new window.SpeechSynthesisUtterance(
+        this.$store.getters.startwatchAnnouncement
+      );
+      window.speechSynthesis.speak(ut);
+    },
+
     start() {
       this.start_time = Date.now() - this.paused_at;
       this.counting = true;
+      this.announce();
       this.tick();
     },
 
@@ -109,28 +120,12 @@ export default {
 
 <style>
 .elapsed-time {
-  color: white;
+  color: var(--white);
   font-weight: 700;
-  font-size: 3rem;
   text-align: center;
 }
 
 .elapsed-time > span:nth-child(4) {
   font-size: 1.5rem;
-}
-
-.action-button-row {
-  display: flex;
-  justify-content: center;
-}
-
-.action-button-row > button {
-  border: 2px solid white;
-  padding: 0.5rem 1rem;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.05rem;
-  background: transparent;
-  margin: 0 1rem;
 }
 </style>

@@ -3,11 +3,11 @@
         <div>
             <time-input ref="timeInput" v-show="!set" v-model="timelimit" @submit="set = true"></time-input>
             <div v-show="set">
-                <p v-show="!completed" class="countdown">{{ countdown }}</p>
-                <p v-show="completed" class="countdown">Time Up!</p>
+                <p v-show="!completed" class="countdown big-text">{{ countdown }}</p>
+                <p v-show="completed" class="countdown big-text">Time Up!</p>
                 <div class="action-button-row">
-                    <button @click="reset()">Reset</button>
-                    <button @click="toggle()" v-show="!completed">{{ pause_play }}</button>
+                    <button @click="reset()" @keydown.space.prevent="">Reset</button>
+                    <button @click="toggle()" v-show="!completed" @keydown.space.prevent="">{{ pause_play }}</button>
                 </div>
             </div>
             
@@ -102,8 +102,16 @@ export default {
       this.completed = true;
       this.elapsed = 0;
       this.start_time = 0;
+      this.announce();
+    },
 
-      const ut = new window.SpeechSynthesisUtterance("bitches, time is up");
+    announce() {
+      if (this.$store.getters.muted) {
+        return;
+      }
+      const ut = new window.SpeechSynthesisUtterance(
+        this.$store.getters.timeupAnnouncement
+      );
       window.speechSynthesis.speak(ut);
     },
 
@@ -126,26 +134,10 @@ export default {
 <style>
 .countdown {
   display: inline-block;
-  font-size: 3rem;
   font-weight: 700;
   color: white;
   text-align: center;
   width: 100%;
-}
-
-.action-button-row {
-  display: flex;
-  justify-content: center;
-}
-
-.action-button-row > button {
-  border: 2px solid white;
-  padding: 0.5rem 1rem;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.05rem;
-  background: transparent;
-  margin: 0 1rem;
 }
 </style>
 
