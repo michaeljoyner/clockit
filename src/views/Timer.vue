@@ -1,13 +1,13 @@
 <template>
     <div class="timer page">
         <div>
-            <time-input ref="timeInput" v-show="status === 'unset'" v-model="timelimit" @submit="activate"></time-input>
-            <div v-show="status !== 'unset'">
-                <p v-show="status !== 'finished'" class="countdown">{{ countdown }}</p>
-                <p v-show="status === 'finished'" class="countdown">Time Up!</p>
+            <time-input ref="timeInput" v-show="!set" v-model="timelimit" @submit="set = true"></time-input>
+            <div v-show="set">
+                <p v-show="!completed" class="countdown">{{ countdown }}</p>
+                <p v-show="completed" class="countdown">Time Up!</p>
                 <div class="action-button-row">
                     <button @click="reset()">Reset</button>
-                    <button @click="toggle()" v-show="status !== 'finished'">{{ pause_play }}</button>
+                    <button @click="toggle()" v-show="!completed">{{ pause_play }}</button>
                 </div>
             </div>
             
@@ -28,9 +28,9 @@ export default {
       timelimit: 0,
       start_time: 0,
       elapsed: 0,
-      active: false,
-      interval: null,
-      status: "unset"
+      paused: true,
+      completed: false,
+      set: false
     };
   },
 
@@ -49,7 +49,7 @@ export default {
     },
 
     pause_play() {
-      return this.status === "paused" ? "Start" : "Pause";
+      return this.paused ? "Start" : "Pause";
     }
   },
 
@@ -57,6 +57,10 @@ export default {
     this.$refs.timeInput.$el.focus();
 
     window.addEventListener("keydown", this.handleKeys);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("keydown", this.handleKeys);
   },
 
   methods: {
@@ -70,24 +74,22 @@ export default {
       }
     },
 
-    activate() {
-      this.status = "paused";
-    },
-
     start() {
-      this.status = "counting";
+      this.paused = false;
       this.start_time = Date.now();
       this.tick();
     },
 
     pause() {
-      this.status = "paused";
+      this.paused = true;
       this.timelimit = this.timelimit - Math.round(this.elapsed / 1000);
       this.elapsed = 0;
-      this.stopCountdown();
     },
 
     tick() {
+      if (this.paused) {
+        return;
+      }
       this.elapsed = Date.now() - this.start_time;
       if (this.elapsed / 1000 > this.timelimit) {
         return this.finish();
@@ -97,7 +99,7 @@ export default {
     },
 
     finish() {
-      this.status = "finished";
+      this.completed = true;
       this.elapsed = 0;
       this.start_time = 0;
 
@@ -107,18 +109,15 @@ export default {
 
     reset() {
       this.timelimit = 0;
-      this.status = "unset";
+      this.elapsed = 0;
+      this.set = false;
+      this.completed = false;
+      this.paused = true;
       this.$nextTick(() => this.$refs.timeInput.$el.focus());
     },
 
     toggle() {
-      if (this.status === "counting") {
-        return this.pause();
-      }
-
-      if (this.status === "paused") {
-        return this.start();
-      }
+      return this.paused ? this.start() : this.pause();
     }
   }
 };

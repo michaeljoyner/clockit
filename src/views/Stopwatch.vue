@@ -60,6 +60,10 @@ export default {
     window.addEventListener("keydown", this.handleKeys);
   },
 
+  beforeDestroy() {
+    window.removeEventListener("keydown", this.handleKeys);
+  },
+
   methods: {
     handleKeys({ keyCode }) {
       if (keyCode === 32) {
