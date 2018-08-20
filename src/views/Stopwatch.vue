@@ -28,7 +28,7 @@ export default {
 
   computed: {
     pause_play() {
-      return this.counting ? "Pause" : "Play";
+      return this.counting ? "Pause" : "Start";
     },
 
     elapsed() {
@@ -36,7 +36,7 @@ export default {
     },
 
     elapsed_splits() {
-      const t = Math.round((this.elapsed % 1000) / 10);
+      const t = Math.floor((this.elapsed % 1000) / 10);
       return `${t}`.length === 1 ? `0${t}` : `${t}`;
     },
 
